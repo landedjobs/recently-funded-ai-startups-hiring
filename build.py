@@ -7,6 +7,7 @@ from_roundup}, ... ]}
 Run: python3 build.py
 """
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
@@ -15,6 +16,8 @@ HERE = Path(__file__).resolve().parent
 SITE = "https://landed.jobs"
 ORG = "https://github.com/landedjobs"
 BRAND = "Landed"
+CDN = "https://static.b100x.ai/github-repos/images"
+SLUG = "recently-funded-ai-startups-hiring"
 
 # Sector → (emoji, anchor). Order sets section order in the README.
 SECTORS = [
@@ -80,15 +83,15 @@ def age(iso: str, now: datetime) -> str:
 
 
 def avatar(handle, company) -> str:
-	initial = (company or "?").strip()[:1].upper() or "?"
-	fb = f"https://ui-avatars.com/api/?name={quote(initial)}&size=64&background=00A86B&color=fff&bold=true&format=png"
+	# mirrored to our bucket by _shared/mirror_avatars.py (real X avatar, or branded letter fallback)
 	if handle:
-		return f"https://unavatar.io/x/{handle}?fallback={quote(fb, safe='')}"
-	return fb
+		return f"{CDN}/avatars/x/{handle}.png"
+	slug = re.sub(r"[^a-z0-9]+", "-", (company or "").lower()).strip("-") or "x"
+	return f"{CDN}/avatars/co/{slug}.png"
 
 
-def btn(url, asset, alt) -> str:
-	return f'<a href="{url}"><img src="assets/{asset}" width="71" alt="{alt}"></a>'
+def btn(url, name, alt) -> str:
+	return f'<a href="{url}"><img src="{CDN}/buttons/{name}.svg" width="71" alt="{alt}"></a>'
 
 
 def row(s, now) -> str:
@@ -119,9 +122,9 @@ def row(s, now) -> str:
 		line = " · ".join(x for x in [lead, rest] if x)
 		what += f'<br><sub>💰 {line}</sub>'
 
-	go = btn(f'https://www.google.com/search?q={quote(company + " careers jobs")}', "btn-careers-v2.svg", "Careers")
+	go = btn(f'https://www.google.com/search?q={quote(company + " careers jobs")}', "careers", "Careers")
 	if s.get("source_url"):
-		go += "<br>" + btn(s["source_url"], "btn-raise-v2.svg", "The raise")
+		go += "<br>" + btn(s["source_url"], "the-raise", "The raise")
 	return (
 		f'<tr><td align="center" width="130">{who}</td><td align="center" width="90">{raised}</td>'
 		f'<td>{what}</td><td align="center" width="95">{go}</td></tr>'
@@ -160,10 +163,20 @@ def main():
 
 	top = sorted([s for s in startups if s.get("amount_usd")], key=lambda s: s["amount_usd"], reverse=True)[:12]
 
-	nav = " · ".join(
-		[f"[💸 Biggest raises](#biggest-raises)"]
-		+ [f"[{emoji} {name}](#{anchor(name)})" for name, emoji in SECTORS if by_sector[name]]
-	)
+	related = "\n".join([
+		f"- 🧭 [awesome-ai-native-jobs]({ORG}/awesome-ai-native-jobs) — the umbrella that maps the whole AI-native job landscape",
+		f"- 🔥 [whos-hiring-in-ai]({ORG}/whos-hiring-in-ai) — real hiring posts from founders on X, sorted by role",
+		f"- 🚀 [ai-engineer-jobs]({ORG}/ai-engineer-jobs) — 300 live AI engineer roles, auto-updated",
+		f"- 🧠 [llm-engineer-jobs]({ORG}/llm-engineer-jobs) — LLM engineering roles",
+		f"- 🤖 [ai-agent-engineer-jobs]({ORG}/ai-agent-engineer-jobs) — agent-building roles",
+		f"- 🤝 [forward-deployed-engineer-jobs]({ORG}/forward-deployed-engineer-jobs) — FDE & customer-facing engineering",
+		f"- 📈 [gtm-engineer-jobs]({ORG}/gtm-engineer-jobs) — GTM engineering roles",
+		f"- 🎓 [ai-fellowships-and-residencies]({ORG}/ai-fellowships-and-residencies) — 75 fellowships, residencies & programs",
+		f"- 📘 [ai-interview-guides]({ORG}/ai-interview-guides) — 33 company interview guides",
+		f"- ❓ [ai-interview-questions]({ORG}/ai-interview-questions) — 331 real interview questions with answers",
+		f"- 🧪 [projects-to-land-an-ai-job]({ORG}/projects-to-land-an-ai-job) — portfolio projects that actually get you hired",
+		f"- 🗺️ [ai-product-engineer-roadmap]({ORG}/ai-product-engineer-roadmap) — the AI product engineer roadmap",
+	])
 	toc = "\n".join(
 		[f"- [💸 Biggest raises this month](#biggest-raises) · **{len(top)}**"]
 		+ [f"- [{emoji} {name}](#{anchor(name)}) · **{len(by_sector[name])}**" for name, emoji in SECTORS if by_sector[name]]
@@ -174,10 +187,9 @@ def main():
 
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
-  <img src="assets/banner-light.svg" alt="Recently Funded AI Startups Hiring" width="100%">
-</picture>
+<a href="{SITE}"><img src="https://static.b100x.ai/email/landed-wordmark.png" alt="Landed" width="200"></a>
+
+<img src="{CDN}/{SLUG}/banner.svg" alt="Recently Funded AI Startups Hiring" width="100%">
 
 ![Startups](https://img.shields.io/badge/{len(startups)}%20funded%20startups-ff5b29?style=flat-square) ![Capital](https://img.shields.io/badge/{money(total_cap).replace('$', '%24')}%2B%20raised%20tracked-00A86B?style=flat-square) ![Updated](https://img.shields.io/badge/updated-{today.replace('-', '.')}-6C2BD9?style=flat-square) [![Stars](https://img.shields.io/github/stars/landedjobs/recently-funded-ai-startups-hiring?style=social)]({ORG}/recently-funded-ai-startups-hiring)
 
@@ -185,8 +197,6 @@ def main():
 Fresh funding means fresh headcount. These teams are staffing up *right now*, often before a single role hits the job boards.
 
 *Curated weekly by [{BRAND}]({SITE}).*
-
-{nav}
 
 </div>
 
@@ -217,23 +227,25 @@ _The largest rounds in the window — the teams with the most new runway to spen
 
 ---
 
-## How this list is built
-
-We track fresh AI funding announcements (bootstrapped from [@fundable_ai](https://x.com/fundable_ai), expanding to more sources), pull out what each company does, the round, and the backers, and sort them by sector. Roundup posts are expanded so every company gets its own row. It's a weekly snapshot — always confirm a company is hiring your role before you reach out.
-
-**Know a raise we missed?** [Add it]({ORG}/recently-funded-ai-startups-hiring/issues/new?template=add-startup.yml) or open a PR editing `data/startups.json`. See [CONTRIBUTING.md](CONTRIBUTING.md).
-
 ## How to actually get hired at a fresh-funded startup
 
 Right after a raise, the founder is the hiring manager and cold, specific outreach works. Reference the round, show one relevant thing you've built, and be clear about the role you'd own. Fewer, sharper applications beat the spray — [{BRAND}]({SITE}) brings you matched roles daily, drafts your answers to each application's questions, and preps you with courses and voice mock interviews.
 
 **[Get started free → {SITE}]({SITE})**
 
+---
+
+## How this list is built
+
+We track fresh AI funding announcements (bootstrapped from [@fundable_ai](https://x.com/fundable_ai), expanding to more sources), pull out what each company does, the round, and the backers, and sort them by sector. Roundup posts are expanded so every company gets its own row. It's a weekly snapshot — always confirm a company is hiring your role before you reach out.
+
+**Know a raise we missed?** [Add it]({ORG}/recently-funded-ai-startups-hiring/issues/new?template=add-startup.yml) or open a PR editing `data/startups.json`. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Related
 
-- 🧭 [awesome-ai-native-jobs]({ORG}/awesome-ai-native-jobs) — the umbrella for the whole family
-- 🔥 [whos-hiring-in-ai]({ORG}/whos-hiring-in-ai) — real hiring posts from founders on X
-- 🚀 [ai-engineer-jobs]({ORG}/ai-engineer-jobs) — 300 live AI engineer roles, auto-updated
+Part of the [Landed]({SITE}) AI-native job-search family:
+
+{related}
 
 <div align="center">
 <sub>{len(startups)} startups · {money(total_cap)}+ tracked · updated {today} · maintained by <a href="{SITE}">{BRAND}</a>. Funding data from public announcements; verify before acting. Not affiliated with the listed companies or investors.</sub>
