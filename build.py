@@ -89,7 +89,7 @@ def avatar(handle, company) -> str:
 
 def btn(url, label, color, logo=None) -> str:
 	logo_part = f"&logo={logo}&logoColor=white" if logo else ""
-	return f'<a href="{url}"><img src="https://img.shields.io/badge/{label}-{color}?style=for-the-badge{logo_part}" height="30" alt="{label}"></a>'
+	return f'<a href="{url}"><img src="https://img.shields.io/badge/{label}-{color}?style=for-the-badge{logo_part}" height="44" alt="{label}"></a>'
 
 
 def row(s, now) -> str:
