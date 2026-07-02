@@ -120,9 +120,9 @@ def row(s, now) -> str:
 		line = " · ".join(x for x in [lead, rest] if x)
 		what += f'<br><sub>💰 {line}</sub>'
 
-	go = btn(f'https://www.google.com/search?q={quote(company + " careers jobs")}', "btn-careers.svg", "Careers")
+	go = btn(f'https://www.google.com/search?q={quote(company + " careers jobs")}', "btn-careers-v2.svg", "Careers")
 	if s.get("source_url"):
-		go += "<br>" + btn(s["source_url"], "btn-raise.svg", "The raise")
+		go += "<br>" + btn(s["source_url"], "btn-raise-v2.svg", "The raise")
 	return f"| {who} | {raised} | {what} | {go} |"
 
 
