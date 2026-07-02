@@ -88,7 +88,7 @@ def avatar(handle, company) -> str:
 
 
 def btn(url, asset, alt) -> str:
-	return f'<a href="{url}"><img src="assets/{asset}" width="168" alt="{alt}"></a>'
+	return f'<a href="{url}"><img src="assets/{asset}" width="118" alt="{alt}"></a>'
 
 
 def row(s, now) -> str:
@@ -124,7 +124,7 @@ def row(s, now) -> str:
 		go += "<br>" + btn(s["source_url"], "btn-raise-v2.svg", "The raise")
 	return (
 		f'<tr><td align="center" width="130">{who}</td><td align="center" width="90">{raised}</td>'
-		f'<td>{what}</td><td align="center" width="180">{go}</td></tr>'
+		f'<td>{what}</td><td align="center" width="140">{go}</td></tr>'
 	)
 
 
