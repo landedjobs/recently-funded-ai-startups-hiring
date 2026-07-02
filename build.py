@@ -87,9 +87,9 @@ def avatar(handle, company) -> str:
 	return fb
 
 
-def btn(url, label, color, logo=None) -> str:
-	logo_part = f"&logo={logo}&logoColor=white" if logo else ""
-	return f'<a href="{url}"><img src="https://img.shields.io/badge/{label}-{color}?style=for-the-badge{logo_part}" height="44" alt="{label}"></a>'
+def btn(url, asset, alt) -> str:
+	# Local SVG button assets render at their true size (48px tall) — GitHub ignores height= on remote badges.
+	return f'<a href="{url}"><img src="assets/{asset}" height="48" alt="{alt}"></a>'
 
 
 def row(s, now) -> str:
@@ -120,9 +120,9 @@ def row(s, now) -> str:
 		line = " · ".join(x for x in [lead, rest] if x)
 		what += f'<br><sub>💰 {line}</sub>'
 
-	go = btn(f'https://www.google.com/search?q={quote(company + " careers jobs")}', "Careers", "ff5b29")
+	go = btn(f'https://www.google.com/search?q={quote(company + " careers jobs")}', "btn-careers.svg", "Careers")
 	if s.get("source_url"):
-		go += "<br>" + btn(s["source_url"], "The_raise", "1DA1F2", "x")
+		go += "<br>" + btn(s["source_url"], "btn-raise.svg", "The raise")
 	return f"| {who} | {raised} | {what} | {go} |"
 
 
