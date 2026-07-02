@@ -89,7 +89,7 @@ def avatar(handle, company) -> str:
 
 def btn(url, asset, alt) -> str:
 	# Local SVG button assets render at their true size (48px tall) — GitHub ignores height= on remote badges.
-	return f'<a href="{url}"><img src="assets/{asset}" height="48" alt="{alt}"></a>'
+	return f'<a href="{url}"><img src="assets/{asset}" width="168" alt="{alt}"></a>'
 
 
 def row(s, now) -> str:
