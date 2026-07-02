@@ -88,7 +88,6 @@ def avatar(handle, company) -> str:
 
 
 def btn(url, asset, alt) -> str:
-	# Local SVG button assets render at their true size (48px tall) — GitHub ignores height= on remote badges.
 	return f'<a href="{url}"><img src="assets/{asset}" width="168" alt="{alt}"></a>'
 
 
@@ -123,12 +122,17 @@ def row(s, now) -> str:
 	go = btn(f'https://www.google.com/search?q={quote(company + " careers jobs")}', "btn-careers-v2.svg", "Careers")
 	if s.get("source_url"):
 		go += "<br>" + btn(s["source_url"], "btn-raise-v2.svg", "The raise")
-	return f"| {who} | {raised} | {what} | {go} |"
+	return (
+		f'<tr><td align="center" width="130">{who}</td><td align="center" width="90">{raised}</td>'
+		f'<td>{what}</td><td align="center" width="180">{go}</td></tr>'
+	)
 
 
 def table(rows, now) -> str:
-	head = "| Company | Raised | What they do & who backed them | Go |\n|:---:|:---:|:---|:---:|"
-	return "\n".join([head] + [row(s, now) for s in rows])
+	# Raw HTML table: markdown tables can't set td width, and without a fixed Go column
+	# GitHub's forced img{max-width:100%} lets the text column crush the buttons to nothing.
+	head = '<tr><th align="center">Company</th><th align="center">Raised</th><th align="left">What they do &amp; who backed them</th><th align="center">Go</th></tr>'
+	return "<table>\n" + "\n".join([head] + [row(s, now) for s in rows]) + "\n</table>"
 
 
 def section(sector, emoji, items, now) -> str:
