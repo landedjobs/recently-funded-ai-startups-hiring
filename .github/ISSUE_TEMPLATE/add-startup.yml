@@ -1,0 +1,52 @@
+name: ➕ Add a recently-funded startup
+description: Suggest an AI startup that just raised and is hiring
+title: "[raise] "
+labels: ["new-raise"]
+body:
+  - type: input
+    id: company
+    attributes:
+      label: Company
+    validations:
+      required: true
+  - type: input
+    id: amount
+    attributes:
+      label: Amount & round
+      placeholder: e.g. $12M Series A
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: Link to the funding announcement (tweet, press, Crunchbase).
+    validations:
+      required: true
+  - type: dropdown
+    id: sector
+    attributes:
+      label: Sector
+      options:
+        - AI Infrastructure
+        - Agents & Automation
+        - Developer Tools
+        - Data & Analytics
+        - Healthcare & Bio
+        - Robotics & Hardware
+        - Fintech
+        - Security
+        - Legal & Compliance
+        - Sales & GTM
+        - Enterprise SaaS
+        - Consumer
+        - Defense & Aerospace
+        - Climate & Energy
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: What they do + backers + founders
+      description: One or two lines on the product, the lead investor(s), and the founder(s) if you know them.
