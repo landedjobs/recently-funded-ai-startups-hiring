@@ -1,6 +1,117 @@
 {
-  "updatedAt": "2026-07-02",
+  "updatedAt": "2026-07-24",
   "startups": [
+    {
+      "company": "Spectro Cloud",
+      "handle": "spectrocloud",
+      "amount": "$100M+",
+      "amount_usd": 100000000,
+      "round": "Series D",
+      "sector": "AI Infrastructure",
+      "description": "AI infrastructure management software for running production workloads across enterprise, public-sector, neocloud, and sovereign-cloud environments.",
+      "lead_investors": [
+        "Goldman Sachs Alternatives"
+      ],
+      "other_investors": [
+        "AMD Ventures",
+        "Ericsson",
+        "LG Technology Ventures",
+        "Maximus"
+      ],
+      "founders": [],
+      "location": "San Jose",
+      "funded_at": "2026-07-15",
+      "source_url": "https://www.spectrocloud.com/news/spectro-cloud-raises-100-million-series-d-to-accelerate-production-ai-adoption",
+      "from_roundup": false
+    },
+    {
+      "company": "Prime Intellect",
+      "handle": "PrimeIntellect",
+      "amount": "$130M",
+      "amount_usd": 130000000,
+      "round": "Series A",
+      "sector": "AI Infrastructure",
+      "description": "Open infrastructure for training, evaluating, and deploying models, including distributed compute, reinforcement learning, environments, and sandboxes.",
+      "lead_investors": [
+        "Radical Ventures"
+      ],
+      "other_investors": [
+        "NVIDIA Ventures",
+        "Intel Capital",
+        "Dell Technologies Capital"
+      ],
+      "founders": [],
+      "location": "San Francisco",
+      "funded_at": "2026-07-08",
+      "source_url": "https://www.primeintellect.ai/blog/series-a",
+      "from_roundup": false
+    },
+    {
+      "company": "Gradium",
+      "handle": "gradium_ai",
+      "amount": "$100M",
+      "amount_usd": 100000000,
+      "round": "Seed extension",
+      "sector": "AI Infrastructure",
+      "description": "Real-time voice AI models and infrastructure for developers building conversational agents.",
+      "lead_investors": [],
+      "other_investors": [
+        "NVIDIA"
+      ],
+      "founders": [],
+      "location": "Paris and San Francisco",
+      "funded_at": "2026-07-08",
+      "source_url": "https://gradium.ai/blog/gradium-100-million-funding-nvidia",
+      "from_roundup": false
+    },
+    {
+      "company": "Alta",
+      "handle": null,
+      "amount": "$25M",
+      "amount_usd": 25000000,
+      "round": "Series A",
+      "sector": "Sales & GTM",
+      "description": "An AI system of action for go-to-market teams, with agents for sales, marketing, account management, and cross-selling workflows.",
+      "lead_investors": [
+        "IN Venture"
+      ],
+      "other_investors": [
+        "Mindset Ventures",
+        "Skywell Capital",
+        "LeumiTech77",
+        "Entrée Capital"
+      ],
+      "founders": [],
+      "location": "Tel Aviv",
+      "funded_at": "2026-07-08",
+      "source_url": "https://www.prnewswire.com/news-releases/alta-raises-25m-to-redefine-the-go-to-market-architecture-for-revenue-teams-302820618.html",
+      "from_roundup": false
+    },
+    {
+      "company": "Hakimo",
+      "handle": "hakimo_ai",
+      "amount": "$12M",
+      "amount_usd": 12000000,
+      "round": "Growth round",
+      "sector": "Security",
+      "description": "AI-assisted physical security monitoring that helps teams review alarms and coordinate responses.",
+      "lead_investors": [
+        "Zigg Capital"
+      ],
+      "other_investors": [
+        "Vertex Ventures",
+        "Neotribe Ventures",
+        "Rocketship.vc",
+        "Defy.vc"
+      ],
+      "founders": [
+        "Sam Joseph"
+      ],
+      "location": "Menlo Park",
+      "funded_at": "2026-07-08",
+      "source_url": "https://www.hakimo.ai/blog/12m-growth-round",
+      "from_roundup": false
+    },
     {
       "company": "DeepSeek",
       "handle": "deepseek_ai",

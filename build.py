@@ -8,7 +8,7 @@ Run: python3 build.py
 """
 import json
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import quote
 
@@ -18,6 +18,7 @@ ORG = "https://github.com/landedjobs"
 BRAND = "Landed"
 CDN = "https://static.b100x.ai/github-repos/images"
 SLUG = "recently-funded-ai-startups-hiring"
+RECENT_WINDOW_DAYS = 45
 
 # Sector → (emoji, anchor). Order sets section order in the README.
 SECTORS = [
@@ -141,7 +142,7 @@ def table(rows, now) -> str:
 def section(sector, emoji, items, now) -> str:
 	if not items:
 		return ""
-	items = sorted(items, key=lambda s: s.get("amount_usd") or 0, reverse=True)
+	items = sorted(items, key=lambda s: s.get("funded_at") or "", reverse=True)
 	return (
 		f'<a name="{anchor(sector)}"></a>\n## {emoji} {sector} · {len(items)}\n\n'
 		f"{table(items, now)}\n\n[⬆ back to top](#top)\n"
@@ -150,8 +151,13 @@ def section(sector, emoji, items, now) -> str:
 
 def main():
 	updated, startups = load()
-	now = datetime.now(timezone.utc).replace(tzinfo=None)
+	now = datetime.fromisoformat(updated) if updated else datetime.now(timezone.utc).replace(tzinfo=None)
 	today = updated or now.strftime("%Y-%m-%d")
+	cutoff = now - timedelta(days=RECENT_WINDOW_DAYS)
+	startups = [
+		s for s in startups
+		if s.get("funded_at") and datetime.fromisoformat(s["funded_at"]) >= cutoff
+	]
 	total_cap = sum(s.get("amount_usd") or 0 for s in startups)
 
 	by_sector = {name: [s for s in startups if s.get("sector") == name] for name, _ in SECTORS}
@@ -178,7 +184,7 @@ def main():
 		f"- 🗺️ [ai-product-engineer-roadmap]({ORG}/ai-product-engineer-roadmap) — the AI product engineer roadmap",
 	])
 	toc = "\n".join(
-		[f"- [💸 Biggest raises this month](#biggest-raises) · **{len(top)}**"]
+		[f"- [💸 Biggest raises in this window](#biggest-raises) · **{len(top)}**"]
 		+ [f"- [{emoji} {name}](#{anchor(name)}) · **{len(by_sector[name])}**" for name, emoji in SECTORS if by_sector[name]]
 	)
 	sections = "\n---\n\n".join(section(name, emoji, by_sector[name], now) for name, emoji in SECTORS if by_sector[name])
@@ -193,16 +199,16 @@ def main():
 
 ![Startups](https://img.shields.io/badge/{len(startups)}%20funded%20startups-ff5b29?style=flat-square) ![Capital](https://img.shields.io/badge/{money(total_cap).replace('$', '%24')}%2B%20raised%20tracked-00A86B?style=flat-square) ![Updated](https://img.shields.io/badge/updated-{today.replace('-', '.')}-6C2BD9?style=flat-square) [![Stars](https://img.shields.io/github/stars/landedjobs/recently-funded-ai-startups-hiring?style=social)]({ORG}/recently-funded-ai-startups-hiring)
 
-**AI startups that just raised — sorted by sector, newest capital first.**
+**AI startups that just raised — a source-linked, rolling {RECENT_WINDOW_DAYS}-day snapshot.**
 Fresh funding means fresh headcount. These teams are staffing up *right now*, often before a single role hits the job boards.
 
-*Curated weekly by [{BRAND}]({SITE}).*
+*Last editorial verification: {today}. Maintained by [{BRAND}]({SITE}).*
 
 </div>
 
 ---
 
-> **Why a funding list is a job list** — a round closes, the team's #1 job becomes hiring, and for a few weeks the fastest way in is to reach the founder directly (the people in these posts) before the careers page even updates. This list tracks who just raised, what they do, and who backed them — so you can apply while the door is widest. ⭐ **Star it** — refreshed weekly.
+> **Why a funding list is a job list** — a round closes, the team's #1 job becomes hiring, and for a few weeks the fastest way in is to reach the founder directly (the people in these posts) before the careers page even updates. This list tracks who just raised, what they do, and who backed them — so you can apply while the door is widest. ⭐ **Star it** to save the current snapshot.
 
 ## Jump to
 
@@ -213,7 +219,7 @@ Fresh funding means fresh headcount. These teams are staffing up *right now*, of
 ---
 
 <a name="biggest-raises"></a>
-## 💸 Biggest raises this month · {len(top)}
+## 💸 Biggest raises in this window · {len(top)}
 
 _The largest rounds in the window — the teams with the most new runway to spend on people._
 
@@ -237,7 +243,7 @@ Right after a raise, the founder is the hiring manager and cold, specific outrea
 
 ## How this list is built
 
-We track fresh AI funding announcements (bootstrapped from [@fundable_ai](https://x.com/fundable_ai), expanding to more sources), pull out what each company does, the round, and the backers, and sort them by sector. Roundup posts are expanded so every company gets its own row. It's a weekly snapshot — always confirm a company is hiring your role before you reach out.
+We track public AI funding announcements, link every row to the announcement or roundup it came from, and keep only rounds inside the rolling {RECENT_WINDOW_DAYS}-day window as of the verification date above. We extract what each company does, the round, and named backers, then sort each sector by announcement date. Funding is a hiring signal, not proof of an open role: always confirm the company is hiring your role before reaching out.
 
 **Know a raise we missed?** [Add it]({ORG}/recently-funded-ai-startups-hiring/issues/new?template=add-startup.yml) or open a PR editing `data/startups.json`. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
