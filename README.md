@@ -15,6 +15,12 @@ Fresh funding means fresh headcount. These teams are staffing up *right now*, of
 
 </div>
 
+> [!IMPORTANT]
+> **This list stopped updating on 24 Jul 2026, so the rounds below are old.** For startups hiring today, use [awesome-ai-native-jobs](https://github.com/landedjobs/awesome-ai-native-jobs), updated every day from company careers pages.
+>
+> Or **[let landed find startup roles that fit you and apply for you](https://app.landed.jobs/signup?from=github&cta=archived-notice&utm_source=github&utm_medium=referral&utm_campaign=github-recently-funded-ai-startups-hiring&utm_content=github-archived-notice)**. Your first 10 applications are free.
+
+
 ---
 
 > **Why a funding list is a job list** — a round closes, the team's #1 job becomes hiring, and for a few weeks the fastest way in is to reach the founder directly (the people in these posts) before the careers page even updates. This list tracks who just raised, what they do, and who backed them — so you can apply while the door is widest. ⭐ **Star it** to save the current snapshot.
